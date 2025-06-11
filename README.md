@@ -1,70 +1,79 @@
-# Getting Started with Create React App
+ #Task Manager 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack task management application built with React for the frontend and Node.js/Express with MongoDB for the backend API. Users can register, log in, create, view, update, and delete tasks, as well as manage their profile by changing their password. This application provides a persistent data solution using MongoDB Atlas.
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+*   **User Authentication:**
+    *   Secure user registration and login using JWT (JSON Web Tokens).
+    *   Password hashing via `bcryptjs` for enhanced security.
+    *   Session persistence with tokens stored in `localStorage`.
+    *   Profile management: Users can change their password.
+*   **Task Management (CRUD):**
+    *   **Create:** Add new tasks with title, description, status, priority, and an optional due date.
+    *   **Read:** View a filterable list of tasks created by the logged-in user on a central dashboard.
+    *   **Update:** Modify existing task details, including status, priority, and due date.
+    *   **Delete:** Remove tasks when they are no longer needed.
+*   **Task Properties:**
+    *   **Status Tracking:** 'Todo', 'In Progress', 'Done'.
+    *   **Priority Levels:** 'Low', 'Medium', 'High'.
+    *   **Due Dates:** Selectable via an MUI DatePicker.
+    *   (Optional: Add 'Assignee' if you implemented it).
+*   **User Interface & Experience:**
+    *   Clean, responsive, and modern UI built with Material UI (MUI).
+    *   Intuitive dashboard for task visualization and management.
+    *   Modal dialogs for efficient task creation and editing.
+    *   User-friendly notifications and error messages using MUI Snackbars.
+    *   Client-side form validation for improved data entry.
+*   **Persistent Data Storage:**
+    *   All user and task data is stored persistently in a MongoDB Atlas cloud database.
+*   **API:**
+    *   RESTful API built with Node.js and Express.js.
+    *   Protected routes using JWT authentication middleware.
+    *   Mongoose ODM for MongoDB interactions.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🛠️ Technologies Used
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**Frontend:**
+*   React (v18+)
+*   React Router (v6)
+*   Context API (for global state management: Auth & Tasks)
+*   Axios (for HTTP API calls)
+*   Material UI (MUI v5)
+    *   `@mui/material` (Core components)
+    *   `@mui/icons-material` (Icons)
+    *   `@mui/x-date-pickers` (Date Picker component)
+*   `date-fns` (for date formatting and utilities)
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Backend:**
+*   Node.js
+*   Express.js (Web framework)
+*   MongoDB (NoSQL Database)
+*   Mongoose (ODM for MongoDB)
+*   JSON Web Token (`jsonwebtoken`) (Authentication)
+*   `bcryptjs` (Password hashing)
+*   `cors` (Cross-Origin Resource Sharing)
+*   `dotenv` (Environment variable management)
 
-### `npm run build`
+**Development & Version Control:**
+*   Git & GitHub
+*   Nodemon (for automatic backend server restarts during development)
+*   [Your Code Editor, e.g., VS Code]
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Login Page:**
+![Login Page](./screenshots/login-page.png)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**Registration Page:**
+![Registration Page](./screenshots/register-page.png)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Dashboard (Task List):**
+![Dashboard](./screenshots/dashboard-tasks.png)
 
-### `npm run eject`
+**Add/Edit Task Modal (with DatePicker):**
+![Task Modal](./screenshots/task-modal.png)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**User Profile / Change Password Page:**
+![Profile Page](./screenshots/profile-page.png)
