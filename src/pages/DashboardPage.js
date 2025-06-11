@@ -26,7 +26,6 @@ function DashboardPage() {
     error: taskError, 
     addTask,
     updateTask,
-    refreshTasks 
   } = useTasks();
   const navigate = useNavigate();
 
