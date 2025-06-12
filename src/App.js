@@ -1,19 +1,18 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext'; // Your updated AuthContext
+import { AuthProvider, useAuth } from './context/AuthContext'; 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import DashboardPage from './pages/DashboardPage'; // We'll update this later
+import DashboardPage from './pages/DashboardPage'; 
 import { CssBaseline, ThemeProvider, createTheme, CircularProgress, Box } from '@mui/material';
-import { TaskProvider } from './context/TaskContext'; // We'll update this next
+import { TaskProvider } from './context/TaskContext'; 
 import ProfilePage from './pages/ProfilePage';
 
 const theme = createTheme({
-  // Your MUI theme (palette, typography, etc.)
   palette: {
     primary: { main: '#1976d2' },
     secondary: { main: '#dc004e' },
+    background: { default: '#f0f2f5' }
   },
 });
 
@@ -22,13 +21,12 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthProvider>
-        <AppRoutes />
+      <AppRoutes />
       </AuthProvider>
     </ThemeProvider>
   );
 }
 
-// Extracted Routes to easily access AuthContext's loading state
 function AppRoutes() {
   const { loading, isAuthenticated } = useAuth();
 
@@ -49,7 +47,7 @@ function AppRoutes() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <TaskProvider> {/* TaskProvider will also be updated */}
+              <TaskProvider> 
                 <DashboardPage />
               </TaskProvider>
             </ProtectedRoute>
@@ -63,9 +61,8 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-        {/* Redirect root based on auth status */}
         <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
-        <Route path="*" element={<Navigate to="/" />} /> {/* Catch-all */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
@@ -73,10 +70,9 @@ function AppRoutes() {
 
 
 function ProtectedRoute({ children }) {
-  const { isAuthenticated, loading } = useAuth(); // Use isAuthenticated from context
+  const { isAuthenticated, loading } = useAuth(); 
 
   if (loading) {
-    // This check might be redundant if AppRoutes already handles global loading
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
         <CircularProgress />
