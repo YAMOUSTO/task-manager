@@ -106,9 +106,9 @@ function DashboardPage() {
 
   return (
     <>
-      <AppBar position="static">
+      {/*<AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, backgroundColor: 'background.paper', p:3 }}>
             Task Manager
           </Typography>
           {currentUser && <Typography sx={{ mr: 2 }}>{currentUser.name || currentUser.email}
@@ -127,7 +127,12 @@ function DashboardPage() {
       </AppBar>
 
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          mb: 2, 
+          flexWrap: 'wrap' }}>
           <Typography variant="h4" component="h1" sx={{ mb: { xs: 2, sm: 0 } }}>
             My Tasks
           </Typography>
@@ -148,6 +153,105 @@ function DashboardPage() {
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => handleOpenModal()}
+            >
+              Add Task
+            </Button>
+          </Box>
+        </Box>/*/}
+         <AppBar 
+        position="static" 
+        sx={{ 
+          background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)', // Blue gradient
+          color: '#fff',
+          boxShadow: 3
+        }}
+      >
+        <Toolbar>
+          <Typography 
+            variant="h6" 
+            component="div" 
+            sx={{ 
+              flexGrow: 1, 
+              backgroundColor: 'transparent', 
+              p: 3,
+              color: '#fff'
+            }}
+          >
+            Task Manager
+          </Typography>
+          {currentUser && (
+            <Typography sx={{ mr: 2, color: '#e3f2fd', fontWeight: 500 }}>
+              {currentUser.name || currentUser.email}
+            </Typography>
+          )}
+          <Tooltip title="Profile & Settings">
+            <IconButton color="inherit" component={RouterLink} to="/profile">
+              <AccountCircleIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Logout">
+            <IconButton color="inherit" onClick={handleLogout}>
+              <LogoutIcon />
+            </IconButton>
+          </Tooltip>
+        </Toolbar>
+      </AppBar>
+
+      <Container 
+        maxWidth="lg" 
+        sx={{ 
+          mt: 4, 
+          mb: 4, 
+          background: { xs: '#f5f7fa', sm: '#e3f2fd' }, // Responsive background
+          borderRadius: 3, 
+          boxShadow: 2, 
+          p: { xs: 1, sm: 3 }
+        }}
+      >
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          mb: 2, 
+          flexWrap: 'wrap' 
+        }}>
+          <Typography 
+            variant="h4" 
+            component="h1" 
+            sx={{ 
+              mb: { xs: 2, sm: 0 }, 
+              color: '#1976d2', 
+              fontWeight: 700 
+            }}
+          >
+            My Tasks
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+            <FormControl size="small" sx={{ minWidth: 150 }}>
+              <InputLabel>Filter by Status</InputLabel>
+              <Select
+                value={statusFilter}
+                label="Filter by Status"
+                onChange={(e) => setStatusFilter(e.target.value)}
+                sx={{ background: '#fff' }}
+              >
+                {TASK_STATUSES_FOR_FILTER.map(status => (
+                  <MenuItem key={status} value={status}>{status}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => handleOpenModal()}
+              sx={{
+                background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
+                color: '#fff',
+                fontWeight: 600,
+                '&:hover': {
+                  background: 'linear-gradient(90deg, #1565c0 0%, #1e88e5 100%)'
+                }
+              }}
             >
               Add Task
             </Button>
