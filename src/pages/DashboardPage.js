@@ -126,7 +126,7 @@ function DashboardPage() {
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4, backgroundColor: '#A0C878' }}>
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
           <Typography variant="h4" component="h1" sx={{ mb: { xs: 2, sm: 0 } }}>
             My Tasks
