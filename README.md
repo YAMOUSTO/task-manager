@@ -1,4 +1,4 @@
- #Task Manager#
+ #Task Manager
 
 A full-stack task management application built with React for the frontend and Node.js/Express with MongoDB for the backend API. Users can register, log in, create, view, update, and delete tasks, as well as manage their profile by changing their password. This application provides a persistent data solution using MongoDB Atlas.
 
