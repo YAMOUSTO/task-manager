@@ -1,23 +1,32 @@
-import React, { useState, useEffect } from 'react'; 
+// src/pages/LoginPage.js
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
-  Container,
-  TextField,
+  Avatar,
   Button,
-  Typography,
+  CssBaseline,
+  TextField,
+  Link as MuiLink,
+  Paper, // Paper can still be used for the form side if we choose
   Box,
+  Grid,
+  Typography,
   Alert,
-  CircularProgress,
-  Link as MuiLink 
+  CircularProgress
 } from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
+// --- THIS IMPORT MUST BE PRESENT ---
+import loginBgImage from '../assets/login0.jpg';
+// ---
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [formLoading, setFormLoading] = useState(false); 
-  const { login, isAuthenticated, loading: authLoading } = useAuth(); 
+  const [formLoading, setFormLoading] = useState(false);
+  const { login, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,13 +40,11 @@ function LoginPage() {
     setError('');
     setFormLoading(true);
     try {
-      await login(email, password); 
+      await login(email, password);
       navigate('/dashboard', { replace: true });
     } catch (err) {
-
       const errorMessage = err.response?.data?.msg || err.message || 'Failed to log in. Check credentials.';
       setError(errorMessage);
-      console.error("Login error:", err);
     }
     setFormLoading(false);
   };
@@ -50,24 +57,42 @@ function LoginPage() {
     );
   }
 
+  // --- USING THE RELIABLE FLEXBOX LAYOUT ---
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
+    <Box sx={{ display: 'flex', height: '100vh' }}>
+      <CssBaseline />
+      
+      {/* Left Side: Image Panel */}
+      <Box 
+        sx={{ 
+          flex: '1 1 50%', // Takes up ~60% of width
+          display: { xs: 'none', md: 'block' }, // Hide on small screens, show on medium and up
+          backgroundImage: `url(${loginBgImage})`, // This should now work
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+
+      {/* Right Side: Form Panel */}
+      <Box 
         sx={{
-          marginTop: 15,
+          flex: '1 1 45%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          backgroundColor: '#A0C878',
-          boxShadow: '20',
-          borderRadius: '20px'
+          justifyContent: 'center',
+          p: 4,
+          backgroundColor: 'background.paper'
         }}
       >
-        <Typography component="h1" variant="h5" color='white'>
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
           Log In
         </Typography>
         {error && <Alert severity="error" sx={{ mt: 2, width: '100%' }}>{error}</Alert>}
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', maxWidth: '400px' }}>
           <TextField
             margin="normal"
             required
@@ -98,19 +123,24 @@ function LoginPage() {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, color: 'white', backgroundColor: '#222831', fontStyle: 'italic' }}
+            sx={{ mt: 3, mb: 2 }}
             disabled={formLoading}
           >
             {formLoading ? <CircularProgress size={24} color="inherit" /> : 'Log In'}
           </Button>
-          <Box textAlign="center" fontStyle={'italic'} >
-            <MuiLink component={RouterLink} to="/register" variant="body2">
-              {"Don't have an account? Sign Up"}
-            </MuiLink>
-          </Box>
+          <Grid container>
+            <Grid item xs>
+              {/* Forgot password? */}
+            </Grid>
+            <Grid item>
+              <MuiLink component={RouterLink} to="/register" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </MuiLink>
+            </Grid>
+          </Grid>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 }
 
