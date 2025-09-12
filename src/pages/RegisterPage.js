@@ -1,25 +1,33 @@
-import React, { useState, useEffect } from 'react'; 
+// src/pages/RegisterPage.js
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
-  Container,
-  TextField,
+  Avatar,
   Button,
-  Typography,
+  CssBaseline,
+  TextField,
+  Link as MuiLink,
+  Paper,
   Box,
+  Grid,
+  Typography,
   Alert,
-  CircularProgress,
-  Link as MuiLink 
+  CircularProgress
 } from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
+// Use the same background image for consistency
+import loginBgImage from '../assets/register.jpg';
 
 function RegisterPage() {
-  const [name, setName] = useState(''); 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const [formLoading, setFormLoading] = useState(false); 
-  const { signup, isAuthenticated, loading: authLoading } = useAuth(); 
+  const [formLoading, setFormLoading] = useState(false);
+  const { signup, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,13 +38,15 @@ function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Clear previous errors
+
     if (password !== confirmPassword) {
-      return setError('Passwords do not match');
+      return setError('Passwords do not match.');
     }
-    if (password.length < 6) { 
-        return setError('Password must be at least 6 characters');
+    if (password.length < 6) {
+      return setError('Password must be at least 6 characters.');
     }
-    setError('');
+
     setFormLoading(true);
     try {
       await signup(name, email, password);
@@ -44,13 +54,12 @@ function RegisterPage() {
     } catch (err) {
       const errorMessage = err.response?.data?.msg || err.message || 'Failed to create an account.';
       setError(errorMessage);
-      console.error("Signup error:", err);
     }
     setFormLoading(false);
   };
 
   if (authLoading || (!authLoading && isAuthenticated)) {
-     return (
+    return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
         <CircularProgress />
       </Box>
@@ -58,30 +67,40 @@ function RegisterPage() {
   }
 
   return (
-    <Container component="main" maxWidth="xs" >
-      <Box
+    <Box sx={{ display: 'flex', height: '100vh' }}>
+      <CssBaseline />
+      
+      {/* Left Side: Image Panel */}
+      <Box 
+        sx={{ 
+          flex: '1 1 50%',
+          display: { xs: 'none', md: 'block' },
+          backgroundImage: `url(${loginBgImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+
+      {/* Right Side: Form Panel */}
+      <Box 
         sx={{
-          marginTop: 8,
+          flex: '1 1 50%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          backgroundColor: '#9FC87E',
-          borderRadius: '20px',
-          color: 'white'
+          justifyContent: 'center',
+          p: 4,
+          backgroundColor: 'background.paper'
         }}
       >
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
         <Typography component="h1" variant="h5">
           Sign Up
         </Typography>
         {error && <Alert severity="error" sx={{ mt: 2, width: '100%' }}>{error}</Alert>}
-        <Box component="form" 
-        onSubmit={handleSubmit} 
-        noValidate 
-        sx={{ 
-          mt: 1, 
-          fontStyle: 'italic', 
-          fontFamily: 'bold'
-       }}>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', maxWidth: '400px' }}>
           <TextField
             margin="normal"
             required
@@ -112,7 +131,7 @@ function RegisterPage() {
             required
             fullWidth
             name="password"
-            label="Password (min. 6 characters)"
+            label="Password"
             type="password"
             id="password"
             autoComplete="new-password"
@@ -137,23 +156,21 @@ function RegisterPage() {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ 
-              mt: 3, mb: 2, 
-              backgroundColor: '#222831', 
-              fontStyle: 'italic' 
-            }}
+            sx={{ mt: 3, mb: 2 }}
             disabled={formLoading}
           >
             {formLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
           </Button>
-          <Box textAlign="center" color={'white'}>
-            <MuiLink component={RouterLink} to="/login" variant="body2">
-              {'Already have an account? Log In'}
-            </MuiLink>
-          </Box>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <MuiLink component={RouterLink} to="/login" variant="body2">
+                {"Already have an account? Log In"}
+              </MuiLink>
+            </Grid>
+          </Grid>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 }
 
