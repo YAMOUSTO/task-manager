@@ -1,4 +1,4 @@
- #Task Manager 
+# ✨ Task Manager Pro ✨
 
 A full-stack task management application built with React for the frontend and Node.js/Express with MongoDB for the backend API. Users can register, log in, create, view, update, and delete tasks, as well as manage their profile by changing their password. This application provides a persistent data solution using MongoDB Atlas.
 
@@ -8,7 +8,7 @@ A full-stack task management application built with React for the frontend and N
     *   Secure user registration and login using JWT (JSON Web Tokens).
     *   Password hashing via `bcryptjs` for enhanced security.
     *   Session persistence with tokens stored in `localStorage`.
-    *   Profile management: Users can change their password.
+    *   Profile management: Users can change their passwords.
 *   **Task Management (CRUD):**
     *   **Create:** Add new tasks with title, description, status, priority, and an optional due date.
     *   **Read:** View a filterable list of tasks created by the logged-in user on a central dashboard.
