@@ -6,13 +6,43 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage'; 
 import { CssBaseline, ThemeProvider, createTheme, CircularProgress, Box } from '@mui/material';
 import { TaskProvider } from './context/TaskContext'; 
+//import {createTheme} from '@mui/material/styles';
 import ProfilePage from './pages/ProfilePage';
+
 
 const theme = createTheme({
   palette: {
+    mode: 'light',
     primary: { main: '#1976d2' },
-    secondary: { main: '#dc004e' },
-    background: { default: '#f0f2f5' }
+    secondary: { main: '#f50057', },
+    background: { 
+      default: '#f4f6f8', 
+      paper: '#ffffff',
+    },
+    dark: {
+      background: '#202124', // Main dark background color
+      paper: '#2d2e30',
+      text: {
+        primary: '#ffffff',
+        secondary: '#b0b0b0',
+      },
+      primary: {
+        main: '#3f51b5',
+      },
+      secondary: {
+        main: '#FCB53B',
+      }
+    },
+  },
+  typography: {
+    fontFamily: 'Roboto, sans-serif',
+    fontStyle: 'italic',
+    fontWeight: 400,
+    fontSize: 14,
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 500,
+    fontWeightBold: 700
   },
 });
 

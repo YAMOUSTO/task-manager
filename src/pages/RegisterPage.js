@@ -3,27 +3,22 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  Link as MuiLink,
-  Box,
-  Grid,
-  Typography,
-  Alert,
-  CircularProgress
+  Button, CssBaseline, TextField, Box,
+  Typography, Alert, CircularProgress, IconButton, InputAdornment
 } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import Logo from '../components/Logo'; // Import our Logo component
 
-// Use the same background image for consistency
-import loginBgImage from '../assets/register.jpg';
+// The image for the right side
+import sideBgImage from '../assets/register.jpg';
 
 function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [formLoading, setFormLoading] = useState(false);
   const { signup, isAuthenticated, loading: authLoading } = useAuth();
@@ -37,7 +32,7 @@ function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError('');
 
     if (password !== confirmPassword) {
       return setError('Passwords do not match.');
@@ -56,6 +51,9 @@ function RegisterPage() {
     }
     setFormLoading(false);
   };
+  
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event) => event.preventDefault();
 
   if (authLoading || (!authLoading && isAuthenticated)) {
     return (
@@ -69,18 +67,7 @@ function RegisterPage() {
     <Box sx={{ display: 'flex', height: '100vh' }}>
       <CssBaseline />
       
-      {/* Left Side: Image Panel */}
-      <Box 
-        sx={{ 
-          flex: '1 1 50%',
-          display: { xs: 'none', md: 'block' },
-          backgroundImage: `url(${loginBgImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
-
-      {/* Right Side: Form Panel */}
+      {/* --- LEFT SIDE: THE NEW DARK MODE SIGN UP FORM (50% width) --- */}
       <Box 
         sx={{
           flex: '1 1 50%',
@@ -88,87 +75,145 @@ function RegisterPage() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          p: 4,
-          backgroundColor: 'background.paper'
+          p: { xs: 2, sm: 4 },
+          bgcolor: '#202124', // The dark background color
+          color: 'white',
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign Up
-        </Typography>
-        {error && <Alert severity="error" sx={{ mt: 2, width: '100%' }}>{error}</Alert>}
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', maxWidth: '400px' }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="name"
-            label="Full Name"
-            name="name"
-            autoComplete="name"
-            autoFocus
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            disabled={formLoading}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={formLoading}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={formLoading}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="confirmPassword"
-            label="Confirm Password"
-            type="password"
-            id="confirmPassword"
-            autoComplete="new-password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            disabled={formLoading}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={formLoading}
-          >
-            {formLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
-          </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <MuiLink component={RouterLink} to="/login" variant="body2">
-                {"Already have an account? Log In"}
-              </MuiLink>
-            </Grid>
-          </Grid>
+        <Logo color="white" variant="h4" />
+        
+        <Box 
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '450px',
+            mt: 3,
+          }}
+        >
+          <Typography component="h1" variant="h5" sx={{ mb: 1 }}>
+            Create your Account
+          </Typography>
+          
+          {error && <Alert severity="error" sx={{ my: 2, width: '100%' }}>{error}</Alert>}
+          
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
+            <TextField
+              margin="normal" required fullWidth id="name" label="Your full name"
+              name="name" autoComplete="name" autoFocus value={name}
+              onChange={(e) => setName(e.target.value)} disabled={formLoading}
+              sx={{
+                  '& label.Mui-focused': { color: 'white' },
+                  '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: 'grey.700' },
+                      '&:hover fieldset': { borderColor: 'primary.main' },
+                      '&.Mui-focused fieldset': { borderColor: 'primary.main' },
+                      '& input': { color: 'white' }
+                  },
+                  '& .MuiInputLabel-root': { color: 'grey.500' }
+              }}
+            />
+            <TextField
+              margin="normal" required fullWidth id="email" label="Your email address"
+              name="email" autoComplete="email" value={email}
+              onChange={(e) => setEmail(e.target.value)} disabled={formLoading}
+              sx={{
+                  '& label.Mui-focused': { color: 'white' },
+                  '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: 'grey.700' },
+                      '&:hover fieldset': { borderColor: 'primary.main' },
+                      '&.Mui-focused fieldset': { borderColor: 'primary.main' },
+                      '& input': { color: 'white' }
+                  },
+                  '& .MuiInputLabel-root': { color: 'grey.500' }
+              }}
+            />
+            <TextField
+              margin="normal" required fullWidth name="password" label="Create a password"
+              type={showPassword ? 'text' : 'password'} id="password"
+              autoComplete="new-password" value={password}
+              onChange={(e) => setPassword(e.target.value)} disabled={formLoading}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}
+                      edge="end" sx={{ color: 'grey.500' }}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                  '& label.Mui-focused': { color: 'white' },
+                  '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: 'grey.700' },
+                      '&:hover fieldset': { borderColor: 'primary.main' },
+                      '&.Mui-focused fieldset': { borderColor: 'primary.main' },
+                      '& input': { color: 'white' }
+                  },
+                  '& .MuiInputLabel-root': { color: 'grey.500' }
+              }}
+            />
+            <TextField
+              margin="normal" required fullWidth name="confirmPassword" label="Confirm your password"
+              type="password" id="confirmPassword"
+              autoComplete="new-password" value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)} disabled={formLoading}
+               sx={{
+                  '& label.Mui-focused': { color: 'white' },
+                  '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: 'grey.700' },
+                      '&:hover fieldset': { borderColor: 'primary.main' },
+                      '&.Mui-focused fieldset': { borderColor: 'primary.main' },
+                      '& input': { color: 'white' }
+                  },
+                  '& .MuiInputLabel-root': { color: 'grey.500' }
+              }}
+            />
+            <Button 
+          type="submit" 
+          fullWidth 
+          variant="contained"
+          startIcon={<PersonAddIcon />}
+          sx={{ 
+            mt: 3, 
+            mb: 2, 
+            py: 1.2,
+            fontSize: '1rem',
+            bgcolor: '#0095f6', 
+            '&:hover': { 
+              bgcolor: '#0077c2'
+            } 
+          }} 
+          disabled={formLoading}
+        >
+          {formLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
+        </Button>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mt: 2 }}>
+              <Typography variant="body2" sx={{ color: 'grey.400' }}>
+                Already have an account?
+              </Typography>
+              <Button component={RouterLink} to="/login" variant="outlined" size="small">
+                Log In
+              </Button>
+            </Box>
+          </Box>
         </Box>
       </Box>
+
+      {/* --- RIGHT SIDE: THE IMAGE PANEL (50% width) --- */}
+      <Box 
+        sx={{ 
+          flex: '1 1 50%',
+          display: { xs: 'none', md: 'block' },
+          backgroundImage: `url(${sideBgImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
     </Box>
   );
 }

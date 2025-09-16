@@ -3,16 +3,20 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
-  Avatar, Button, CssBaseline, TextField, Link as MuiLink,
-  Box, Grid, Typography, Alert, CircularProgress
+  Button, CssBaseline, TextField, Box,
+  Typography, Alert, CircularProgress, IconButton, InputAdornment
 } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PersonIcon from '@mui/icons-material/Person';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import Logo from '../components/Logo'; // Import our new Logo component
 
-import loginBgImage from '../assets/login0.jpg';
+// The image for the left side
+import sideBgImage from '../assets/login0.jpg';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [formLoading, setFormLoading] = useState(false);
   const { login, isAuthenticated, loading: authLoading } = useAuth();
@@ -38,6 +42,9 @@ function LoginPage() {
     setFormLoading(false);
   };
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event) => event.preventDefault();
+
   if (authLoading || (!authLoading && isAuthenticated)) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
@@ -49,15 +56,19 @@ function LoginPage() {
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
       <CssBaseline />
+      
+      {/* --- LEFT SIDE: THE IMAGE PANEL (50% width) --- */}
       <Box 
         sx={{ 
           flex: '1 1 50%',
           display: { xs: 'none', md: 'block' },
-          backgroundImage: `url(${loginBgImage})`,
+          backgroundImage: `url(${sideBgImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       />
+
+      {/* --- RIGHT SIDE: THE NEW DARK MODE LOGIN FORM (50% width) --- */}
       <Box 
         sx={{
           flex: '1 1 50%',
@@ -65,37 +76,109 @@ function LoginPage() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          p: 4,
-          backgroundColor: 'background.paper'
+          p: { xs: 2, sm: 4 },
+          bgcolor: '#202124', // The dark background color
+          color: 'white', // Set default text color to white for this Box
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">Log In</Typography>
-        {error && <Alert severity="error" sx={{ mt: 2, width: '100%' }}>{error}</Alert>}
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', maxWidth: '400px' }}>
-          <TextField
-            margin="normal" required fullWidth id="email" label="Email Address"
-            name="email" autoComplete="email" autoFocus value={email}
-            onChange={(e) => setEmail(e.target.value)} disabled={formLoading}
-          />
-          <TextField
-            margin="normal" required fullWidth name="password" label="Password"
-            type="password" id="password" autoComplete="current-password"
-            value={password} onChange={(e) => setPassword(e.target.value)} disabled={formLoading}
-          />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} disabled={formLoading}>
-            {formLoading ? <CircularProgress size={24} color="inherit" /> : 'Log In'}
-          </Button>
-          <Grid container>
-            <Grid item xs />
-            <Grid item>
-              <MuiLink component={RouterLink} to="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </MuiLink>
-            </Grid>
-          </Grid>
+        <Logo color="white" variant="h4" />
+        
+        <Box 
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '450px',
+            mt: 3,
+          }}
+        >
+          <Typography component="h1" variant="h5" sx={{ mb: 1 }}>
+            Sign in to Task Manager
+          </Typography>
+          
+          {error && <Alert severity="error" sx={{ my: 2, width: '100%' }}>{error}</Alert>}
+          
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
+            <TextField
+              margin="normal" required fullWidth id="email" label="Your email address"
+              name="email" autoComplete="email" autoFocus value={email}
+              onChange={(e) => setEmail(e.target.value)} disabled={formLoading}
+              // Dark mode styles for TextField
+              sx={{
+                  '& label.Mui-focused': { color: 'white' },
+                  '& .MuiInput-underline:after': { borderBottomColor: 'white' },
+                  '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: 'grey.700' },
+                      '&:hover fieldset': { borderColor: 'primary.main' },
+                      '&.Mui-focused fieldset': { borderColor: 'primary.main' },
+                      '& input': { color: 'white' }
+                  },
+                  '& .MuiInputLabel-root': { color: 'grey.500' }
+              }}
+            />
+            <TextField
+              margin="normal" required fullWidth name="password" label="Your password"
+              type={showPassword ? 'text' : 'password'} id="password"
+              autoComplete="current-password" value={password}
+              onChange={(e) => setPassword(e.target.value)} disabled={formLoading}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                      sx={{ color: 'grey.500' }}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              // Dark mode styles for TextField
+              sx={{
+                  '& label.Mui-focused': { color: 'white' },
+                  '& .MuiInput-underline:after': { borderBottomColor: 'white' },
+                  '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: 'grey.700' },
+                      '&:hover fieldset': { borderColor: 'primary.main' },
+                      '&.Mui-focused fieldset': { borderColor: 'primary.main' },
+                      '& input': { color: 'white' }
+                  },
+                  '& .MuiInputLabel-root': { color: 'grey.500' }
+              }}
+            />
+            
+            <Button 
+              type="submit" 
+              fullWidth 
+              variant="contained" 
+              startIcon={<PersonIcon />} // Use the imported icon here
+              sx={{ 
+                mt: 3, 
+                mb: 2, 
+                py: 1.2, // Padding top/bottom for height
+                fontSize: '1rem', // Make font slightly larger
+                bgcolor: '#0095f6', // A vibrant, modern blue
+                '&:hover': { 
+                  bgcolor: '#0077c2' // A slightly darker blue for the hover effect
+                } 
+              }} 
+              disabled={formLoading}
+            >
+              {formLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign In'}
+            </Button>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+              <Typography variant="body2" sx={{ color: 'grey.400' }}>
+                Don't have an account?
+              </Typography>
+              <Button component={RouterLink} to="/register" variant="outlined" size="small">
+                Sign up
+              </Button>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Box>
