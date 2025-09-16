@@ -1,6 +1,7 @@
+// src/context/TaskContext.js
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useAuth } from './AuthContext'; 
-import { fetchTasks as apiFetchTasks, createTask as apiCreateTask, updateTaskById as apiUpdateTask, deleteTaskById as apiDeleteTask } from '../api'; // Import your API functions
+import { useAuth } from './AuthContext';
+import { fetchTasks, createTask, updateTaskById, deleteTaskById } from '../api';
 
 const TaskContext = createContext();
 
@@ -11,46 +12,44 @@ export function useTasks() {
 export function TaskProvider({ children }) {
   const [tasks, setTasks] = useState([]);
   const [loadingTasks, setLoadingTasks] = useState(true);
-  const [error, setError] = useState(null); 
-  const { isAuthenticated, currentUser } = useAuth(); 
+  const [error, setError] = useState(null);
+  const { isAuthenticated } = useAuth();
 
-  // Fetch tasks when component mounts or user becomes authenticated
   const loadTasks = useCallback(async () => {
-    if (!isAuthenticated || !currentUser) {
-      setTasks([]); 
+    if (!isAuthenticated) {
+      setTasks([]);
       setLoadingTasks(false);
       return;
     }
-
     setLoadingTasks(true);
     setError(null);
     try {
-      const response = await apiFetchTasks();
+      const response = await fetchTasks();
       setTasks(response.data);
     } catch (err) {
-      setError(err.response ? err.response.data.msg || 'Failed to fetch tasks' : err.message);
-      setTasks([]); 
+      console.error("Error fetching tasks:", err);
+      setError(err.response?.data?.msg || 'Failed to fetch tasks');
+      setTasks([]);
     } finally {
       setLoadingTasks(false);
     }
-  }, [isAuthenticated, currentUser]); 
+  }, [isAuthenticated]);
 
   useEffect(() => {
     loadTasks();
-  }, [loadTasks]); // loadTasks is stable due to useCallback
+  }, [loadTasks]);
 
   const addTask = async (taskData) => {
     if (!isAuthenticated) throw new Error("User not authenticated");
     setError(null);
     try {
-      // The backend assigns userId, creatorEmail, createdAt, id
-      const response = await apiCreateTask(taskData);
-      setTasks(prevTasks => [...prevTasks, response.data]); 
+      const response = await createTask(taskData);
+      setTasks(prevTasks => [...prevTasks, response.data]);
       return response.data;
     } catch (err) {
-      const errorMsg = err.response ? err.response.data.msg || 'Failed to add task' : err.message;
+      const errorMsg = err.response?.data?.msg || 'Failed to add task';
       setError(errorMsg);
-      throw new Error(errorMsg); 
+      throw new Error(errorMsg);
     }
   };
 
@@ -58,54 +57,38 @@ export function TaskProvider({ children }) {
     if (!isAuthenticated) throw new Error("User not authenticated");
     setError(null);
     try {
-      const response = await apiUpdateTask(taskId, updatedData);
+      const response = await updateTaskById(taskId, updatedData);
       setTasks(prevTasks =>
-        prevTasks.map(task => (task.id === taskId ? response.data : task))
+        prevTasks.map(task => (task._id === taskId ? response.data : task))
       );
       return response.data;
     } catch (err) {
-      const errorMsg = err.response ? err.response.data.msg || 'Failed to update task' : err.message;
+      const errorMsg = err.response?.data?.msg || 'Failed to update task';
       setError(errorMsg);
       throw new Error(errorMsg);
     }
   };
 
-const deleteTask = async (taskId) => { 
-  if (!isAuthenticated) throw new Error("User not authenticated");
-  setError(null);
-  try {
-    console.log("TaskContext: deleteTask - Attempting to delete task with ID:", taskId);
-    await apiDeleteTask(taskId); 
-
-    setTasks(prevTasks => {
-      console.log("TaskContext: deleteTask - taskId to remove from local state:", taskId);
-      console.log("TaskContext: deleteTask - prevTasks (IDs only):", JSON.stringify(prevTasks.map(t => t._id)));
-
-    
-      const newTasks = prevTasks.filter(task => task._id !== taskId);
-  
-
-      console.log("TaskContext: deleteTask - newTasks (IDs only):", JSON.stringify(newTasks.map(t => t._id)));
-      console.log("TaskContext: deleteTask - Was a task removed from local state?", prevTasks.length !== newTasks.length);
-      return newTasks;
-    });
-
-  } catch (err) {
-    console.error("Error deleting task in TaskContext:", err.response ? err.response.data : err.message);
-    const errorMsg = err.response ? err.response.data.msg || 'Failed to delete task' : err.message;
-    setError(errorMsg);
-    throw new Error(errorMsg);
-  }
-};
+  const deleteTask = async (taskId) => {
+    if (!isAuthenticated) throw new Error("User not authenticated");
+    setError(null);
+    try {
+      await deleteTaskById(taskId);
+      setTasks(prevTasks => prevTasks.filter(task => task._id !== taskId));
+    } catch (err) {
+      const errorMsg = err.response?.data?.msg || 'Failed to delete task';
+      setError(errorMsg);
+      throw new Error(errorMsg);
+    }
+  };
 
   const value = {
     tasks,
     loadingTasks,
-    error, 
+    error,
     addTask,
     updateTask,
     deleteTask,
-    refreshTasks: loadTasks 
   };
 
   return (

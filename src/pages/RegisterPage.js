@@ -8,7 +8,6 @@ import {
   CssBaseline,
   TextField,
   Link as MuiLink,
-  Paper,
   Box,
   Grid,
   Typography,
