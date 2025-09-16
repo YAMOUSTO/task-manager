@@ -24,12 +24,13 @@ const getPriorityChipProps = (priority) => {
 };
 
 
-function TaskCard({ task, onEdit, setSnackbar }) {
+function TaskCard({ task, onEdit, onDelete, setSnackbar }) {
   const { deleteTask, loadingTasks: contextLoading } = useTasks();
   const [isDeleting, setIsDeleting] = React.useState(false);
 
 
   const handleDelete = async () => {
+    onDelete(task);
     if (window.confirm(`Are you sure you want to delete task: "${task.title}"?`)) {
       setIsDeleting(true);
       try {
